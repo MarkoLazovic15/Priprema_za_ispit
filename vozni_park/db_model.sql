@@ -1,0 +1,22 @@
+CREATE TABLE Vozac (
+  vozac_id INTEGER UNSIGNED NOT NULL AUTO_INCREMENT,
+  Ime TEXT NOT NULL,
+  Prezime TEXT NOT NULL,
+  PRIMARY KEY(vozac_id)
+)
+ENGINE=InnoDB;
+
+CREATE TABLE Vozilo (
+  vozilo_id INTEGER UNSIGNED NOT NULL AUTO_INCREMENT,
+  vozac_id INTEGER UNSIGNED NOT NULL,
+  Proizvodjac TEXT NULL,
+  Model TEXT NULL,
+  Registracija TEXT NULL,
+  PRIMARY KEY(vozilo_id),
+  INDEX Model_FKIndex1(vozac_id),
+  FOREIGN KEY(vozac_id)
+    REFERENCES Vozac(vozac_id)
+      ON DELETE RESTRICT
+      ON UPDATE CASCADE
+)
+ENGINE=InnoDB;
