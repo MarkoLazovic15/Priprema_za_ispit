@@ -1,0 +1,37 @@
+INSERT INTO stepen_strucne_spreme (stepen_strucne_spreme.oznaka, stepen_strucne_spreme.naziv)
+VALUES
+('IV','četvorogodišnja škola'),
+('VI/2','trogodišnja viša škola'),
+('VII/1','osnovne akademske studije'),
+('VII/2','master studije'),
+('VIII','doktorat');
+
+INSERT INTO departman (departman.naziv)
+VALUES
+('Proizvodnja'),
+('Menadžment'),
+('Marketing'),
+('Prodaja'),
+('Obezbeđenje');
+
+INSERT INTO mesto (mesto.naziv)
+VALUES
+('Glavni ulaz'),
+('Sporedni ulaz'),
+('Garaza'),
+('Skaldiste A'),
+('Skladiste B');
+
+INSERT INTO zaposleni (zaposleni.ime, zaposleni.prezime, zaposleni.jmbg, zaposleni.born_at, zaposleni.stepen_strucne_spreme_id, zaposleni.departman_id)
+VALUES
+('Petar','Perić','0112984710022','1984-12-01',4,4),
+('Ivana','Ivanić','3001990715200','1990-01-30',3,3),
+('Jovana','Jovanović','2402972815012','1972-02-24',2,4);
+
+INSERT INTO kartica (kartica.broj,kartica.zaposleni_id,kartica.is_active)
+VALUES
+(50125078001,1,0),
+(70128075521,1,1),
+(33117720029,2,1),
+(11378820054,3,0),
+(55503182739,3,1);

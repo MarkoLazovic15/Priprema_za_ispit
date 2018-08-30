@@ -1,0 +1,20 @@
+CREATE VIEW view_prijave AS
+SELECT
+ocitavanje.*,
+zaposleni.zaposleni_id,
+zaposleni.ime,
+zaposleni.prezime,
+zaposleni.jmbg,
+stepen_strucne_spreme.naziv AS naziv_SSS,
+stepen_strucne_spreme.oznaka AS oznaka_SSS,
+departman.naziv AS naziv_departman,
+mesto.naziv AS mesto_naziv
+FROM
+ocitavanje
+INNER JOIN kartica ON ocitavanje.kartica_id = kartica.kartica_id
+INNER JOIN zaposleni ON kartica.zaposleni_id = zaposleni.zaposleni_id
+INNER JOIN stepen_strucne_spreme ON zaposleni.stepen_strucne_spreme_id = zaposleni.stepen_strucne_spreme_id
+INNER JOIN departman ON zaposleni.departman_id = departman.departman_id
+INNER JOIN mesto ON ocitavanje.mesto_id = mesto.mesto_id
+ORDER BY
+ocitavanje.created_at DESC

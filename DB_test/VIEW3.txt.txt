@@ -1,0 +1,11 @@
+CREATE VIEW view_departmani AS
+SELECT
+departman.*,
+COUNT(zaposleni.zaposleni_id) AS broj_zaposlenih
+FROM
+departman
+LEFT JOIN zaposleni on departman.departman_id= zaposleni.departman_id
+GROUP BY
+departman.departman_id
+ORDER BY
+broj_zaposlenih

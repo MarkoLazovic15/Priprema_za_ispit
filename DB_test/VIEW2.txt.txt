@@ -1,0 +1,10 @@
+CREATE VIEW view_zaposleni AS
+SELECT
+zaposleni.*,
+departman.naziv AS departman_naziv,
+stepen_strucne_spreme.naziv AS naziv_SSS,
+stepen_strucne_spreme.oznaka AS oznaka_SSS
+FROM
+zaposleni
+INNER JOIN departman ON zaposleni.departman_id = departman.departman_id
+INNER JOIN stepen_strucne_spreme ON zaposleni.stepen_strucne_spreme_id = stepen_strucne_spreme.stepen_strucne_spreme_id

@@ -1,0 +1,21 @@
+trigger_zaposleni_bi i trigger_zaposleni_bu:
+
+BEGIN
+IF CHAR_LENGTH(NEW.ime) <2 OR CHAR_LENGTH(NEW.prezime) < 2 THEN
+SIGNAL SQLSTATE '50001' SET MESSAGE_TEXT = 'Ime i prezime moraju da budu veci od 2 karaktera';
+END IF;
+
+IF CHAR_LENGTH(NEW.jmbg) !=13 THEN
+SIGNAL SQLSTATE '50003' SET MESSAGE_TEXT = 'JMBG mora da ima 13 karaktera!';
+END IF;
+
+END
+
+trigger_kartica_bi i trigger_kartica_bu:
+
+BEGIN
+IF NEW.broj< 10000000000 THEN
+SIGNAL SQLSTATE '50001' SET MESSAGE_TEXT = 'Broj ID kartice ne sme da bude manji od 10.000.000.000!';
+END IF;
+
+END

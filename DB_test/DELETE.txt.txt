@@ -1,0 +1,7 @@
+DELETE FROM ocitavanje WHERE YEAR(ocitavanje.created_at) = 2017
+AND MONTH(ocitavanje.created_at) = 11
+AND
+(TIME(ocitavanje.created_at)>'08:00:00' OR
+TIME(ocitavanje.created_at)<'18:00:00')
+
+DELETE FROM zaposleni WHERE zaposleni.stepen_strucne_spreme_id = 1 or zaposleni.stepen_strucne_spreme_id=5
