@@ -1,0 +1,127 @@
+INSERT INTO stepen_strucne_spreme (stepen_strucne_spreme.oznaka, stepen_strucne_spreme.naziv)
+VALUES
+('IV','četvorogodišnja škola'),
+('VI/2','trogodišnja viša škola'),
+('VII/1','osnovne akademske studije'),
+('VII/2','master studije'),
+('VIII','doktorat');
+
+INSERT INTO departman (departman.naziv)
+VALUES
+('Proizvodnja'),
+('Menadžment'),
+('Marketing'),
+('Prodaja'),
+('Obezbeđenje');
+
+INSERT INTO mesto (mesto.naziv)
+VALUES
+('Glavni ulaz'),
+('Sporedni ulaz'),
+('Garaza'),
+('Skaldiste A'),
+('Skladiste B');
+
+INSERT INTO zaposleni (zaposleni.ime, zaposleni.prezime, zaposleni.jmbg, zaposleni.born_at, zaposleni.stepen_strucne_spreme_id, zaposleni.departman_id)
+VALUES
+('Petar','Perić','0112984710022','1984-12-01',4,4),
+('Ivana','Ivanić','3001990715200','1990-01-30',3,3),
+('Jovana','Jovanović','2402972815012','1972-02-24',2,4);
+
+INSERT INTO kartica (kartica.broj,kartica.zaposleni_id,kartica.is_active)
+VALUES
+(50125078001,1,0),
+(70128075521,1,1),
+(33117720029,2,1),
+(11378820054,3,0),
+(55503182739,3,1);
+
+CREATE VIEW view_prijave AS
+SELECT
+ocitavanje.*,
+zaposleni.zaposleni_id,
+zaposleni.ime,
+zaposleni.prezime,
+zaposleni.jmbg,
+stepen_strucne_spreme.naziv AS naziv_SSS,
+stepen_strucne_spreme.oznaka AS oznaka_SSS,
+departman.naziv AS naziv_departman,
+mesto.naziv AS mesto_naziv
+FROM
+ocitavanje
+INNER JOIN kartica ON ocitavanje.kartica_id = kartica.kartica_id
+INNER JOIN zaposleni ON kartica.zaposleni_id = zaposleni.zaposleni_id
+INNER JOIN stepen_strucne_spreme ON zaposleni.stepen_strucne_spreme_id = zaposleni.stepen_strucne_spreme_id
+INNER JOIN departman ON zaposleni.departman_id = departman.departman_id
+INNER JOIN mesto ON ocitavanje.mesto_id = mesto.mesto_id
+ORDER BY
+ocitavanje.created_at DESC
+
+CREATE VIEW view_zaposleni AS
+SELECT
+zaposleni.*,
+departman.naziv AS departman_naziv,
+stepen_strucne_spreme.naziv AS naziv_SSS,
+stepen_strucne_spreme.oznaka AS oznaka_SSS
+FROM
+zaposleni
+INNER JOIN departman ON zaposleni.departman_id = departman.departman_id
+INNER JOIN stepen_strucne_spreme ON zaposleni.stepen_strucne_spreme_id = stepen_strucne_spreme.stepen_strucne_spreme_id
+
+CREATE VIEW view_departmani AS
+SELECT
+departman.*,
+COUNT(zaposleni.zaposleni_id) AS broj_zaposlenih
+FROM
+departman
+LEFT JOIN zaposleni on departman.departman_id= zaposleni.departman_id
+GROUP BY
+departman.departman_id
+ORDER BY
+broj_zaposlenih
+
+trigger_zaposleni_bi i trigger_zaposleni_bu:
+
+BEGIN
+IF CHAR_LENGTH(NEW.ime) <2 OR CHAR_LENGTH(NEW.prezime) < 2 THEN
+SIGNAL SQLSTATE '50001' SET MESSAGE_TEXT = 'Ime i prezime moraju da budu veci od 2 karaktera';
+END IF;
+
+IF CHAR_LENGTH(NEW.jmbg) !=13 THEN
+SIGNAL SQLSTATE '50003' SET MESSAGE_TEXT = 'JMBG mora da ima 13 karaktera!';
+END IF;
+
+END
+
+trigger_kartica_bi i trigger_kartica_bu:
+
+BEGIN
+IF NEW.broj< 10000000000 THEN
+SIGNAL SQLSTATE '50001' SET MESSAGE_TEXT = 'Broj ID kartice ne sme da bude manji od 10.000.000.000!';
+END IF;
+
+END
+
+UPDATE zaposleni SET zaposleni.departman_id = 2 WHERE zaposleni.ime LIKE '%v%'
+
+UPDATE
+ departman
+ SET 
+ naziv = 'NIJE U UPOTREBI' 
+ WHERE
+ departman_id IN (
+	SELECT
+	departman_id
+	FROM
+	view_departmani
+	WHERE
+	view_departmani.broj_zaposlenih = 0	
+ )
+ 
+ DELETE FROM ocitavanje WHERE YEAR(ocitavanje.created_at) = 2017
+AND MONTH(ocitavanje.created_at) = 11
+AND
+(TIME(ocitavanje.created_at)>'08:00:00' OR
+TIME(ocitavanje.created_at)<'18:00:00')
+
+DELETE FROM zaposleni WHERE zaposleni.stepen_strucne_spreme_id = 1 or zaposleni.stepen_strucne_spreme_id=5
